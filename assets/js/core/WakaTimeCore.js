@@ -49,6 +49,28 @@ class WakaTimeCore {
         return deferredObject.promise();
     }
 
+    getProjects() {
+        var deferredObject = $.Deferred();
+
+        $.ajax({
+            url: config.projectsApiUrl,
+            dataType: 'json',
+            success: (data) => {
+
+                deferredObject.resolve(data.data);
+
+            },
+            error: (xhr, status, err) => {
+
+                console.error(config.projectsApiUrl, status, err.toString());
+
+                deferredObject.resolve(false);
+            }
+        });
+
+        return deferredObject.promise();
+    }
+
     /**
      * Checks if the user is logged in.
      *
@@ -81,7 +103,8 @@ class WakaTimeCore {
             loggingEnabled: config.loggingEnabled,
             loggingStyle: config.loggingStyle,
             blacklist: '',
-            whitelist: ''
+            whitelist: '',
+            currentProject: '<<LAST_PROJECT>>'
         }).then((items) => {
             if (items.loggingEnabled === true) {
                 changeExtensionState('allGood');
@@ -104,7 +127,7 @@ class WakaTimeCore {
                                 if (! contains(currentActiveTab.url, items.blacklist)) {
                                     this.sendHeartbeat({
                                         url: currentActiveTab.url,
-                                        project: null,
+                                        project: items.currentProject,
                                     }, debug);
                                 }
                                 else {

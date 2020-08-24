@@ -26,6 +26,8 @@ var config = {
     logoutUserUrl: 'https://wakatime.com/logout',
     // Gets stats from the WakaTime API
     summariesApiUrl: 'https://wakatime.com/api/v1/users/current/summaries',
+    // Get projects from the WakaTime API
+    projectsApiUrl: 'https://wakatime.com/api/v1/users/current/projects',
     // Different colors for different states of the extension
     colors: {
         allGood: '',

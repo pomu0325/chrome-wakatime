@@ -27,7 +27,9 @@ var Wakatime = reactCreateClass({
             },
             loggedIn: false,
             loggingEnabled: config.loggingEnabled,
-            totalTimeLoggedToday: '0 minutes'
+            totalTimeLoggedToday: '0 minutes',
+            projects: [],
+            currentProject: undefined
         };
     },
 
@@ -42,9 +44,13 @@ var Wakatime = reactCreateClass({
             if (data !== false) {
 
                 browser.storage.sync.get({
-                    loggingEnabled: config.loggingEnabled
+                    loggingEnabled: config.loggingEnabled,
+                    currentProject: '<<LAST_PROJECT>>'
                 }).then(function(items) {
-                    that.setState({loggingEnabled: items.loggingEnabled});
+                    that.setState({
+                        loggingEnabled: items.loggingEnabled,
+                        currentProject: items.currentProject
+                    });
 
                     if (items.loggingEnabled === true) {
                         changeExtensionState('allGood');
@@ -67,6 +73,10 @@ var Wakatime = reactCreateClass({
                     that.setState({
                         totalTimeLoggedToday: grand_total.text
                     });
+                });
+
+                wakatime.getProjects().done(function(projects) {
+                    that.setState({ projects: projects });
                 });
 
                 wakatime.recordHeartbeat();
@@ -147,6 +157,13 @@ var Wakatime = reactCreateClass({
         });
     },
 
+    _setCurrentProject: function(event) {
+        var currentProject = event.target.value;
+        console.log('setCurrentProject: ' + currentProject);
+        browser.storage.sync.set({ currentProject: currentProject });
+        this.setState({ currentProject: currentProject });
+    },
+
     render: function() {
         return (
             <div>
@@ -161,6 +178,9 @@ var Wakatime = reactCreateClass({
                                 enableLogging={this._enableLogging}
                                 loggingEnabled={this.state.loggingEnabled}
                                 user={this.state.user}
+                                projects={this.state.projects}
+                                currentProject={this.state.currentProject}
+                                setCurrentProject={this._setCurrentProject}
                                 totalTimeLoggedToday={this.state.totalTimeLoggedToday}
                                 logoutUser={this._logoutUser}
                                 loggedIn={this.state.loggedIn} />

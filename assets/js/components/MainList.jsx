@@ -82,8 +82,25 @@ var MainList = reactCreateClass({
             }
         };
 
+        var projectSelector = function() {
+            return (
+                <div className="row">
+                    <div className="col-xs-12">
+                        Project: <select value={that.props.currentProject} onChange={that.props.setCurrentProject}>
+                            <option value="<<LAST_PROJECT>>">(LAST PROJECT)</option>
+                            {that.props.projects.map(function(project, index) {
+                                return <option key={index} value={project.name}>{project.name}</option>;
+                            })};
+                        </select>
+                    </div>
+                </div>
+            );
+        };
+
         return (
             <div>
+
+                {projectSelector()}
 
                 {totalTimeLoggedToday()}
 
