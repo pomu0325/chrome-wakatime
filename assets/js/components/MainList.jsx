@@ -84,9 +84,10 @@ var MainList = reactCreateClass({
 
         var projectSelector = function() {
             return (
-                <div className="row">
-                    <div className="col-xs-12">
-                        Project: <select value={that.props.currentProject} onChange={that.props.setCurrentProject}>
+                <div className="form-group">
+                    <label htmlFor="project" className="col-lg-2 control-label">Project</label>
+                    <div className="col-lg-10">
+                        <select className="form-control" ref="project" value={that.props.currentProject} onChange={that.props.setCurrentProject}>
                             <option value="<<LAST_PROJECT>>">(LAST PROJECT)</option>
                             {that.props.projects.map(function(project, index) {
                                 return <option key={index} value={project.name}>{project.name}</option>;
